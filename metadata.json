@@ -1,0 +1,6 @@
+{
+  "name": "Engineering Bazar",
+  "description": "  Industrial Engineering Marketplace & Supply Chain Solutions",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
