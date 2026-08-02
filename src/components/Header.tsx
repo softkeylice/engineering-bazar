@@ -1,3 +1,6 @@
+import { User as UserIcon } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { AuthModal } from './auth/AuthModel';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Search, Phone, ChevronDown, Menu, X, Shield, FileText, ShoppingBag } from 'lucide-react';
@@ -9,13 +12,15 @@ interface HeaderProps {
   onOpenSearchModal: () => void;
   cartCount?: number;
   onOpenCart?: () => void;
+  onOpenAuthModal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenRFQ,
   onOpenSearchModal,
   cartCount = 0,
-  onOpenCart
+  onOpenCart,
+  onOpenAuthModal
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -23,7 +28,9 @@ export const Header: React.FC<HeaderProps> = ({
   const [activeSection, setActiveSection] = useState<string>('home');
   const navigate = useNavigate();
   const location = useLocation();
-
+  const { user, logout } = useAuth();
+  
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
   useEffect(() => {
     if (location.pathname === '/shop') {
       setActiveSection('catalog-section');
@@ -293,7 +300,35 @@ export const Header: React.FC<HeaderProps> = ({
                 </span>
               )}
             </button>
-
+            {user ? (
+          <div className="relative">
+            <button
+              onClick={() => setAccountMenuOpen(!accountMenuOpen)}
+              className="p-2.5 rounded-full bg-[#F5F6F8] text-slate-600 hover:text-[#1A2A6C] hover:bg-slate-200 transition-colors border border-slate-200 flex items-center gap-1.5 px-3"
+            >
+              <UserIcon className="w-4 h-4 text-[#1A2A6C]" />
+              <span className="text-xs font-semibold max-w-[100px] truncate">{user.email}</span>
+            </button>
+            {accountMenuOpen && (
+              <div className="absolute top-full right-0 mt-2 w-40 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 z-50">
+                <button
+                  onClick={() => { logout(); setAccountMenuOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-[#F5F6F8] hover:text-[#1A2A6C] font-semibold"
+                >
+                  Log Out
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+  <button
+    onClick={onOpenAuthModal}
+    className="p-2.5 rounded-full bg-[#F5F6F8] text-slate-600 hover:text-[#1A2A6C] hover:bg-slate-200 transition-colors border border-slate-200"
+    title="Login"
+  >
+    <UserIcon className="w-4 h-4 text-[#1A2A6C]" />
+  </button>
+)}
             <a
               href="tel:+9118002660000"
               className="px-4 py-2 rounded-full border border-slate-200 hover:border-[#1A2A6C] text-slate-700 hover:text-[#1A2A6C] text-xs font-semibold transition-all flex items-center gap-1.5 bg-[#F5F6F8]"
@@ -402,6 +437,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
       )}
+
     </header>
   );
 };

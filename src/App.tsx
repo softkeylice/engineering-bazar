@@ -1,4 +1,8 @@
-import React, { useState } from 'react';
+import { AuthModal } from './components/auth/AuthModel';
+import React, { useState, useEffect, useRef } from 'react';
+import emailjs from '@emailjs/browser';
+
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -13,8 +17,11 @@ import { CheckoutModal } from './components/cart/CheckoutModal';
 import { ToastContainer, ToastMessage } from './components/Toast';
 import { Product, RFQFormData, CartItem, OrderDetails } from './types';
 import { PRODUCTS } from './data/mockData';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { db } from './lib/firebase';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 
-export default function App() {
+function AppContent() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
@@ -27,7 +34,7 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
-
+  const [authModalOpen, setAuthModalOpen] = useState(false);
   // Toast Helpers
   const addToast = (type: 'success' | 'info' | 'error', title: string, description?: string) => {
     const id = Date.now().toString() + Math.random().toString(36).substring(2, 5);
@@ -37,6 +44,42 @@ export default function App() {
       setToasts((prev) => prev.filter((t) => t.id !== id));
     }, 4500);
   };
+
+
+
+ const { user, loading: authLoading } = useAuth();
+const cartLoadedRef = useRef(false);
+
+// Load this customer's cart on login, clear it on logout
+useEffect(() => {
+  if (authLoading) return;
+  let cancelled = false;
+  cartLoadedRef.current = false;
+
+  if (!user) {
+    setCartItems([]);
+    cartLoadedRef.current = true;
+    return;
+  }
+
+  (async () => {
+    try {
+      const snap = await getDoc(doc(db, 'carts', user.uid));
+      if (cancelled) return;
+      setCartItems(snap.exists() ? (snap.data().items || []) : []);
+    } finally {
+      if (!cancelled) cartLoadedRef.current = true;
+    }
+  })();
+
+  return () => { cancelled = true; };
+}, [user, authLoading]);
+
+// Save cart to Firestore — only once the initial load has finished
+useEffect(() => {
+  if (!user || !cartLoadedRef.current) return;
+  setDoc(doc(db, 'carts', user.uid), { items: cartItems }).catch(console.error);
+}, [cartItems, user]);
 
   const handleDismissToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -64,14 +107,40 @@ export default function App() {
     }
     setRfqModalOpen(true);
   };
+const handleSubmitRFQ = async (data: RFQFormData) => {
+  try {
+    await emailjs.send(
+      'service_pe8k1ij',
+      'template_4t7ddek',
+      {
+        full_name: data.fullName,
+        work_email: data.workEmail,
+        phone: data.phone || 'Not provided',
+        company_name: data.companyName,
+        product_category: data.productCategory,
+        quantity: data.estimatedQuantity || 'Not specified',
+        specifications: data.specifications || 'None provided',
+      },
+      {
+        publicKey: 'IlECv3MwxhjcvBpSf',
+      }
+    );
 
-  const handleSubmitRFQ = (data: RFQFormData) => {
     addToast(
       'success',
       'RFQ Submitted Successfully!',
-      `Thank you ${data.fullName}. Binding direct mill quotation for "${data.companyName}" will be emailed to ${data.workEmail} within 60 minutes.`
+      `Thank you ${data.fullName}. Your quotation request has been emailed successfully.`
     );
-  };
+  } catch (err) {
+    console.error(err);
+
+    addToast(
+      'error',
+      'Email Failed',
+      'Unable to send RFQ. Please try again.'
+    );
+  }
+};
 
   const handleSubscribeNewsletter = (email: string) => {
     addToast(
@@ -112,6 +181,7 @@ export default function App() {
   };
 
   const handleBuyNow = (product: Product) => {
+    if (!user) { setAuthModalOpen(true); return; }
     setCartItems((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (!existing) {
@@ -146,12 +216,12 @@ export default function App() {
   };
 
   const handleOrderSuccess = (order: OrderDetails) => {
-    addToast(
-      'success',
-      'Order Confirmed!',
-      `Order ${order.orderId} placed for ${order.companyName}. Proforma Tax Invoice generated.`
-    );
-  };
+  addToast(
+    'success',
+    'Order Confirmed!',
+    `Order ${order.orderId} placed for ${order.fullName}. Pay ₹${order.grandTotal.toLocaleString('en-IN')} on delivery.`
+  );
+};
 
   const handleToggleCompare = (product: Product) => {
     if (comparedProducts.some((c) => c.id === product.id)) {
@@ -183,12 +253,13 @@ export default function App() {
       <div className="min-h-screen bg-[#F7F8FA] font-sans antialiased text-slate-800 flex flex-col justify-between selection:bg-[#1E3A8A] selection:text-white">
         
         {/* Sticky Global Header */}
-        <Header
-          onOpenRFQ={handleOpenRFQ}
-          onOpenSearchModal={() => setSearchModalOpen(true)}
-          cartCount={totalCartCount}
-          onOpenCart={() => setCartDrawerOpen(true)}
-        />
+       <Header
+  onOpenRFQ={handleOpenRFQ}
+  onOpenSearchModal={() => setSearchModalOpen(true)}
+  cartCount={totalCartCount}
+  onOpenCart={() => setCartDrawerOpen(true)}
+  onOpenAuthModal={() => setAuthModalOpen(true)}
+/>
 
         {/* Main Route Content */}
         <div className="flex-1">
@@ -245,6 +316,7 @@ export default function App() {
         />
 
         <CartDrawer
+        
           isOpen={cartDrawerOpen}
           onClose={() => setCartDrawerOpen(false)}
           cartItems={cartItems}
@@ -252,6 +324,7 @@ export default function App() {
           onRemoveItem={handleRemoveCartItem}
           onClearCart={handleClearCart}
           onProceedToCheckout={() => {
+            if (!user) { setAuthModalOpen(true); return; }
             setCartDrawerOpen(false);
             setCheckoutModalOpen(true);
           }}
@@ -264,7 +337,11 @@ export default function App() {
           onOrderSuccess={handleOrderSuccess}
           onClearCart={handleClearCart}
         />
-
+        <AuthModal
+            isOpen={authModalOpen}
+            onClose={() => setAuthModalOpen(false)}
+            onAuthSuccess={(name) => addToast('success', 'Welcome!', `Signed in as ${name}`)}
+          />
         <SearchModal
           isOpen={searchModalOpen}
           onClose={() => setSearchModalOpen(false)}
@@ -303,5 +380,13 @@ function HomeRouteWrapper(props: {
       onDownloadSpec={props.onDownloadSpec}
       onExploreCatalog={() => navigate('/shop')}
     />
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   );
 }

@@ -108,9 +108,7 @@ export interface OrderDetails {
   orderId: string;
   orderDate: string;
   items: CartItem[];
-  companyName: string;
-  gstin: string;
-  contactName: string;
+  fullName: string;
   email: string;
   phone: string;
   shippingAddress: string;
@@ -118,10 +116,10 @@ export interface OrderDetails {
   state: string;
   pincode: string;
   shippingMethod: 'standard' | 'express' | 'pickup';
-  paymentMethod: 'card' | 'netbanking' | 'upi' | 'po';
+  paymentMethod: 'cod';
   subtotal: number;
   gstAmount: number;
   shippingFee: number;
   grandTotal: number;
-  status: 'Confirmed' | 'Processing Dispatch' | 'In Transit';
+  status: string;
 }

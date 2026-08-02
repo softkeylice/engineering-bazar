@@ -94,7 +94,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSubmitRFQ }) =
                 <div>
                   <div className="font-bold text-[#1E2340]">Address</div>
                   <p className="text-slate-600 mt-0.5 leading-relaxed">
-                    Engineering Bazar Towers, Plot No. 45-B, Industrial Corridor Phase II, Navi Mumbai, Maharashtra 400705, India
+                    S-102, Beside Dynomark, Near Sai Wajan Kata, S Block, MIDC, Bhosari, Pimpri-Chinchwad, Maharashtra 411026, India
                   </p>
                 </div>
               </div>
@@ -105,8 +105,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSubmitRFQ }) =
                 </div>
                 <div>
                   <div className="font-bold text-[#1E2340]">Phone & WhatsApp RFQ Desk</div>
-                  <p className="text-slate-600 mt-0.5">Toll Free: 1800-266-0000 | Direct: +91 22 6900 8800</p>
-                </div>
+<p className="text-slate-600 mt-0.5">Phone / WhatsApp: +91 78880 66672</p>                </div>
               </div>
 
               <div className="flex items-start gap-3">
@@ -115,8 +114,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSubmitRFQ }) =
                 </div>
                 <div>
                   <div className="font-bold text-[#1E2340]">Email Enquiries</div>
-                  <p className="text-slate-600 mt-0.5">rfq@engineeringbazar.com | support@engineeringbazar.com</p>
-                </div>
+<p className="text-slate-600 mt-0.5">confioengineeeringsolution@gmail.com</p>                </div>
               </div>
 
               <div className="flex items-start gap-3">
@@ -137,10 +135,9 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSubmitRFQ }) =
                 <div className="w-10 h-10 rounded-full bg-[#1A2A6C] text-white flex items-center justify-center shadow-lg mb-2 border border-white/30">
                   <MapPin className="w-5 h-5 text-white" />
                 </div>
-                <div className="text-xs font-extrabold text-[#1A2A6C]">Engineering Bazar Central Logistics Hub</div>
-                <div className="text-[10px] text-slate-500">Navi Mumbai • 50,000 Sq.Ft Stocking Facility</div>
-                <a
-                  href="https://maps.google.com"
+                <div className="text-xs font-extrabold text-[#1A2A6C]">Confio Engineering Solution Pvt. Ltd.</div>
+                <div className="text-[10px] text-slate-500">Bhosari, Pimpri-Chinchwad, Maharashtra</div>  <a
+                 href="https://www.google.com/maps/place/Confio+Engineering+Solution+Private+Limited/@18.6231678,73.8397575,17z/data=!3m1!4b1!4m6!3m5!1s0x3bc2b87dfaa1da55:0xc2e086ac43a91b8c!8m2!3d18.6231678!4d73.8423324!16s%2Fg%2F11fzf8krlf?entry=ttu&g_ep=EgoyMDI2MDcyOS4wIKXMDSoASAFQAw%3D%3D"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-3 px-3 py-1.5 rounded-full bg-[#1A2A6C] text-white text-[10px] font-bold flex items-center gap-1 shadow-xs hover:bg-[#14205C] transition-colors border border-[#2E4BC7]/30"

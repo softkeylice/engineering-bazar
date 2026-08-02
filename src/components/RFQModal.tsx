@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Upload, CheckCircle2, Shield, Send, FileCheck } from 'lucide-react';
 import { CATEGORIES_LIST } from '../data/mockData';
 import { RFQFormData } from '../types';
-
+import emailjs from '@emailjs/browser';
 interface RFQModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -30,15 +30,44 @@ export const RFQModal: React.FC<RFQModalProps> = ({
   });
 
   const [dragActive, setDragActive] = useState(false);
+  const [sending, setSending] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fullName || !formData.workEmail || !formData.companyName) return;
-    
-    onSubmitSuccess(formData);
-    onClose();
+
+    setSending(true);
+  try {
+  const response = await emailjs.send(
+  'service_pe8k1ij',
+  'template_4t7ddek',
+  {
+    full_name: formData.fullName,
+    work_email: formData.workEmail,
+    phone: formData.phone || 'Not provided',
+    company_name: formData.companyName,
+    product_category: formData.productCategory,
+    quantity: formData.estimatedQuantity || 'Not specified',
+    specifications: formData.specifications || 'None provided',
+  },
+  {
+    publicKey: 'IlECv3MwxhjcvBpSf',
+  }
+);
+  console.log(response);
+
+onSubmitSuccess(formData);
+onClose();
+
+  console.log("SUCCESS", response);
+
+  alert("Email sent!");
+} catch (err) {
+  console.error("FAILED", err);
+  alert(JSON.stringify(err));
+}
   };
 
   const handleFileDrop = (e: React.DragEvent) => {
@@ -54,7 +83,6 @@ export const RFQModal: React.FC<RFQModalProps> = ({
       setFormData(prev => ({ ...prev, fileName: e.target.files![0].name }));
     }
   };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/75 backdrop-blur-xs p-4 overflow-y-auto">
       <div className="relative bg-white rounded-2xl shadow-2xl max-w-xl w-full my-8 overflow-hidden border border-slate-200 animate-in fade-in zoom-in duration-200">
@@ -207,10 +235,11 @@ export const RFQModal: React.FC<RFQModalProps> = ({
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-full bg-[#1A2A6C] hover:bg-[#14205C] text-white text-xs font-extrabold uppercase tracking-wider transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 border border-[#2E4BC7]/30"
+            disabled={sending}
+            className="w-full py-3.5 rounded-full bg-[#1A2A6C] hover:bg-[#14205C] text-white text-xs font-extrabold uppercase tracking-wider transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2 border border-[#2E4BC7]/30 disabled:opacity-60"
           >
             <Send className="w-4 h-4 text-white" />
-            <span>Submit Request for Quotation</span>
+            <span>{sending ? 'Sending...' : 'Submit Request for Quotation'}</span>
           </button>
         </form>
 
