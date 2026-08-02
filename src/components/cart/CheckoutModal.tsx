@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import {
   X,
   User,
@@ -56,11 +57,61 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({
       : 1200;
   const grandTotal = subtotal + gstAmount + shippingFee;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setStep('contact');
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
+  try {
+    const orderItems = cartItems
+      .map(
+        (item) =>
+          `${item.product.name}
+Quantity: ${item.quantity}
+Unit Price: ₹${item.product.pricePerUnit}
+Total: ₹${item.product.pricePerUnit * item.quantity}`
+      )
+      .join('\n\n');
+
+    await emailjs.send(
+      'service_pe8k1ij',
+      'template_opsud8t',
+      {
+        full_name: formData.fullName,
+        work_email: formData.email,
+        phone: formData.phone,
+
+        company_name: 'Individual Customer',
+
+        shipping_address: formData.shippingAddress,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode,
+
+        shipping_method: formData.shippingMethod,
+
+        order_items: orderItems,
+
+        subtotal: `₹${subtotal.toLocaleString('en-IN')}`,
+        gst: `₹${gstAmount.toLocaleString('en-IN')}`,
+        shipping: shippingFee === 0
+          ? 'FREE'
+          : `₹${shippingFee.toLocaleString('en-IN')}`,
+
+        grand_total: `₹${grandTotal.toLocaleString('en-IN')}`,
+
+        customer_notes: 'No additional notes.'
+      },
+      {
+        publicKey: 'IlECv3MwxhjcvBpSf',
+      }
+    );
+
+    setStep('contact');
+
+  } catch (error) {
+    console.error(error);
+    alert('Unable to send order. Please try again.');
+  }
+};
   const handleCopyPhone = () => {
     navigator.clipboard.writeText(CONTACT_PHONE);
     setCopiedPhone(true);
