@@ -347,35 +347,67 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="flex lg:hidden items-center gap-2">
-            <button
-              onClick={onOpenCart}
-              className="relative p-2 rounded-xl bg-[#1A2A6C] text-white border border-[#1A2A6C]"
-              aria-label="Order Cart"
-            >
-              <ShoppingBag className="w-4 h-4 text-white" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-white text-[#1A2A6C] font-extrabold text-[9px] w-4 h-4 rounded-full flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={onOpenSearchModal}
-              className="p-2 rounded-xl bg-[#F5F6F8] text-slate-700 border border-slate-200"
-              aria-label="Search"
-            >
-              <Search className="w-4 h-4 text-[#1A2A6C]" />
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-xl bg-[#F5F6F8] text-slate-700 border border-slate-200"
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
+<div className="flex lg:hidden items-center gap-2">
+  <button
+    onClick={onOpenCart}
+    className="relative p-2 rounded-xl bg-[#1A2A6C] text-white border border-[#1A2A6C]"
+    aria-label="Order Cart"
+  >
+    <ShoppingBag className="w-4 h-4 text-white" />
+    {cartCount > 0 && (
+      <span className="absolute -top-1 -right-1 bg-white text-[#1A2A6C] font-extrabold text-[9px] w-4 h-4 rounded-full flex items-center justify-center">
+        {cartCount}
+      </span>
+    )}
+  </button>
 
+  {/* Profile / Login — mobile */}
+  {user ? (
+    <div className="relative">
+      <button
+        onClick={() => setAccountMenuOpen(!accountMenuOpen)}
+        className="p-2 rounded-xl bg-[#F5F6F8] text-slate-700 border border-slate-200"
+        aria-label="Account"
+      >
+        <UserIcon className="w-4 h-4 text-[#1A2A6C]" />
+      </button>
+      {accountMenuOpen && (
+        <div className="absolute top-full right-0 mt-2 w-40 bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 z-50">
+          <div className="px-4 py-2 text-[10px] text-slate-400 truncate border-b border-slate-100">{user.email}</div>
+          <button
+            onClick={() => { logout(); setAccountMenuOpen(false); }}
+            className="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-[#F5F6F8] hover:text-[#1A2A6C] font-semibold"
+          >
+            Log Out
+          </button>
+        </div>
+      )}
+    </div>
+  ) : (
+    <button
+      onClick={onOpenAuthModal}
+      className="p-2 rounded-xl bg-[#F5F6F8] text-slate-700 border border-slate-200"
+      aria-label="Login"
+    >
+      <UserIcon className="w-4 h-4 text-[#1A2A6C]" />
+    </button>
+  )}
+
+  <button
+    onClick={onOpenSearchModal}
+    className="p-2 rounded-xl bg-[#F5F6F8] text-slate-700 border border-slate-200"
+    aria-label="Search"
+  >
+    <Search className="w-4 h-4 text-[#1A2A6C]" />
+  </button>
+  <button
+    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+    className="p-2 rounded-xl bg-[#F5F6F8] text-slate-700 border border-slate-200"
+    aria-label="Toggle menu"
+  >
+    {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+  </button>
+</div>
         </div>
       </div>
 
