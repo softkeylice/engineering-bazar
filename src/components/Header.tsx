@@ -109,8 +109,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center justify-between">
           
           {/* Logo Left */}
-          <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="group">
-            <Logo size={42} showText variant="light" />
+<Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="group min-w-0 flex-shrink overflow-hidden">            <Logo size={42} showText variant="light" />
           </Link>
 
           {/* Desktop Center Nav */}
@@ -347,7 +346,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Mobile Menu Button */}
-<div className="flex lg:hidden items-center gap-2">
+<div className="flex lg:hidden items-center gap-2 flex-shrink-0">
   <button
     onClick={onOpenCart}
     className="relative p-2 rounded-xl bg-[#1A2A6C] text-white border border-[#1A2A6C]"
