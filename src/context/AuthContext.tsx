@@ -41,20 +41,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-      setLoading(false);
-    });
-    return unsubscribe;
-  }, []);
+ useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (u) => {
+    setUser(u);
+    setLoading(false);
+    if (u) {
+      try {
+        await ensureUserProfile(u);
+      } catch (err) {
+        console.error('Profile check failed:', err);
+      }
+    }
+  });
+  return unsubscribe;
+}, []);
 
   const login = async (email: string, password: string) => {
     await signInWithEmailAndPassword(auth, email, password);
   };
-  const signup = async (email: string, password: string) => {
+ const signup = async (email: string, password: string) => {
   const cred = await createUserWithEmailAndPassword(auth, email, password);
-  await ensureUserProfile(cred.user);
+  try {
+    await ensureUserProfile(cred.user);
+  } catch (err) {
+    console.error('Profile creation failed, will retry on next auth check:', err);
+  }
 };
  const loginWithGoogle = async () => {
     return await signInWithPopup(auth, new GoogleAuthProvider());

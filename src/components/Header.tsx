@@ -105,17 +105,14 @@ export const Header: React.FC<HeaderProps> = ({
     <header className={`sticky top-0 z-40 transition-all duration-300 bg-white text-[#1E2340] ${
       isScrolled ? 'shadow-md py-2.5 border-b border-slate-200' : 'py-3.5 border-b border-slate-200'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
+<div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">        <div className="flex items-center justify-between">
           
           {/* Logo Left */}
 <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="group min-w-0 flex-shrink overflow-hidden">            <Logo size={42} showText variant="light" />
           </Link>
 
           {/* Desktop Center Nav */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold tracking-wide">
-            {/* Home */}
-            <button
+<nav className="hidden xl:flex items-center gap-4 2xl:gap-6 text-xs font-semibold tracking-wide">            <button
               onClick={() => handleNavClick()}
               className={`relative group py-2 transition-colors ${
                 location.pathname === '/' && activeSection === 'home'
@@ -275,8 +272,7 @@ export const Header: React.FC<HeaderProps> = ({
           </nav>
 
           {/* Right Action Controls */}
-          <div className="hidden sm:flex items-center gap-3">
-            <button
+<div className="hidden xl:flex items-center gap-2 2xl:gap-3">         <button
               onClick={onOpenSearchModal}
               className="p-2.5 rounded-full bg-[#F5F6F8] text-slate-600 hover:text-[#1A2A6C] hover:bg-slate-200 transition-colors border border-slate-200"
               title="Search Materials & Specs"
@@ -329,12 +325,12 @@ export const Header: React.FC<HeaderProps> = ({
   </button>
 )}
             <a
-              href="tel:+9118002660000"
-              className="px-4 py-2 rounded-full border border-slate-200 hover:border-[#1A2A6C] text-slate-700 hover:text-[#1A2A6C] text-xs font-semibold transition-all flex items-center gap-1.5 bg-[#F5F6F8]"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#1A2A6C]" />
-              <span>Call Us</span>
-            </a>
+             href="tel:+9118002660000"
+  className="px-3 2xl:px-4 py-2 rounded-full border border-slate-200 hover:border-[#1A2A6C] text-slate-700 hover:text-[#1A2A6C] text-xs font-semibold transition-all flex items-center gap-1.5 bg-[#F5F6F8]"
+>
+  <Phone className="w-3.5 h-3.5 text-[#1A2A6C]" />
+  <span className="hidden 2xl:inline">Call Us</span>
+</a>
 
             <Link
               to="/shop"
@@ -346,8 +342,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Mobile Menu Button */}
-<div className="flex lg:hidden items-center gap-2 flex-shrink-0">
-  <button
+<div className="flex xl:hidden items-center gap-2 flex-shrink-0">  <button
     onClick={onOpenCart}
     className="relative p-2 rounded-xl bg-[#1A2A6C] text-white border border-[#1A2A6C]"
     aria-label="Order Cart"
