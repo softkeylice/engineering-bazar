@@ -330,13 +330,11 @@ const handleSubmitRFQ = async (data: RFQFormData) => {
           }}
         />
 
-        <CheckoutModal
-          isOpen={checkoutModalOpen}
-          onClose={() => setCheckoutModalOpen(false)}
-          cartItems={cartItems}
-          onOrderSuccess={handleOrderSuccess}
-          onClearCart={handleClearCart}
-        />
+      <CheckoutModal
+  isOpen={checkoutModalOpen}
+  onClose={() => setCheckoutModalOpen(false)}
+  cartItems={cartItems}
+/>
         <AuthModal
             isOpen={authModalOpen}
             onClose={() => setAuthModalOpen(false)}
