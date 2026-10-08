@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "sync-products": "node scripts/sync-products.cjs"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
