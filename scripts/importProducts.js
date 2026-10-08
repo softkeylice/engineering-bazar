@@ -47,14 +47,14 @@ const formattedProducts = products.map((row, index) => {
 
         image: imageVariable,
 
-        specifications: {
-            grade: row.specGrade,
-            standard: row.specStandard,
-            dimensions: row.specDimensions,
-            finish: row.specFinish,
-            hardness: row.specHardness,
-            origin: row.specOrigin
-        },
+       specifications: {
+    grade: String(row.specGrade),
+    standard: String(row.specStandard),
+    dimensions: String(row.specDimensions),
+    finish: String(row.specFinish),
+    hardness: String(row.specHardness),
+    origin: String(row.specOrigin)
+},
 
         pricePerUnit: Number(row.pricePerUnit),
         originalPrice: Number(row.originalPrice),

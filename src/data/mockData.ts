@@ -4,7 +4,8 @@ import prod1 from '../assets/images/customized gearbox.png'
 import prod2 from '../assets/images/prod2.png';
 import prod3 from '../assets/images/prod3.png';
 import { PRODUCTS } from "./products";
-
+import inspectionImg from '../assets/images/services/inspection.jpeg';
+import cnc from '../assets/images/services/cnc.jpg';
 export { PRODUCTS };
 export interface CategoryHierarchy {
   id: string;
@@ -148,7 +149,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 'slide-3',
-    badge: '5-AXIS CNC & CUSTOM HEAVY FABRICATION',
+    badge: ' CNC & CUSTOM HEAVY FABRICATION',
     title: 'End-to-End Contract Manufacturing & Turnkey Solutions',
     subtitle: 'From CAD drawings and material procurement to precision machining, NDT inspection, and pan-India backyard logistics.',
     image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=1600&q=80',
@@ -177,7 +178,7 @@ export const SERVICES: Service[] = [
     title: 'Precision CNC Machining & Turning',
     badgeNumber: '02',
     description: '3, 4, and 5-axis CNC milling, Swiss turning, and deep hole drilling for tight-tolerance OEM components.',
-    image: 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80',
+    image: cnc,
     checklist: [
       'Tolerances down to ±0.005mm',
       'Rapid prototype to mass batch production',
@@ -249,7 +250,7 @@ export const SERVICES: Service[] = [
     title: 'Quality Inspection & NDT Services',
     badgeNumber: '08',
     description: 'Level II/III certified Non-Destructive Testing including Ultrasonic, Radiographic, Magnetic Particle, and PMI.',
-    image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+    image: inspectionImg,
     checklist: [
       'Positive Material Identification (PMI Spectro)',
       'Hydrostatic pressure testing up to 700 Bar',
